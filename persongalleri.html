@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Persongallerit</title>
+    <title>Persongalleri</title>
     <style>
       main {
         display: grid;
@@ -30,11 +30,9 @@
 
     <template>
       <article>
-        <img src="" alt="" class="billede" />
         <img src="" alt="" class="billedurl" />
         <h2 class="navn"></h2>
         <p class="email"></p>
-        <p>Født: <span class="fdag"></span></p>
       </article>
     </template>
 
@@ -61,9 +59,6 @@
           const klon = template.cloneNode(true);
           klon.querySelector(".billedurl").src = "faces/" + person.billede;
           klon.querySelector(".navn").textContent = person.fornavn;
-          klon.querySelector(".email").innerHTML =
-            "<a href='mailto:" + person.email + "''>" + person.email + "</a>";
-          klon.querySelector(".fdag").textContent = person.fødselsdag;
           main.appendChild(klon);
         });
       }
