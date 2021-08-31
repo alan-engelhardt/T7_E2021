@@ -38,8 +38,7 @@
         top: 0;
         width: 100vw;
         height: 100vh;
-        background-color: rgba(0, 0, 0, 0.8);
-        display: none;
+        background-color: #000000dd;
         overflow: scroll;
       }
 
@@ -50,6 +49,15 @@
         border-radius: 25px;
         padding: 12px;
         background-color: white;
+      }
+
+      #luk {
+        position: fixed;
+        padding: 1em;
+        font-size: 1.7em;
+        font-weight: bolder;
+        color: white;
+        cursor: pointer;
       }
 
       button {
@@ -64,15 +72,6 @@
         background-color: greenyellow;
       }
 
-      #luk {
-        position: fixed;
-        padding: 1em;
-        font-size: 1.7em;
-    font-weight: bolder;
-        color: white;
-        cursor: pointer;
-      }
-
       #popup p{
         line-height: 0;
       }
@@ -81,7 +80,6 @@
 
   <body>
     <h1>Persongalleri</h1>
-    
     <header>
       <button class="filterKnap valgt" data-tro="alle">Alle</button>
       <button class="filterKnap" data-tro="ja">Troende</button>
@@ -90,12 +88,11 @@
     </header>
 
     <h2 id="troTekst">Alle</h2>
-
     <main></main>
 
     <template>
       <article>
-        <img src="" alt="" class="billedurl" />
+        <img src="" alt="billede" class="billedurl" />
         <h2 class="navn"></h2>
       </article>
     </template>
