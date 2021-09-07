@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Filter</title>
+    <title>Loop view</title>
     <style>
       main {
         display: grid;
@@ -107,9 +107,20 @@
             const klon = template.cloneNode(true);
             klon.querySelector(".billedurl").src = "faces/" + person.billede;
             klon.querySelector(".navn").textContent = person.fornavn;
+            klon
+              .querySelector("article")
+              .addEventListener("click", () => visDetaljer(person));
             main.appendChild(klon);
           }
         });
+      }
+
+      function visDetaljer(person) {
+        //location.href = "singleView.html?id=" + id;
+        window.open(
+          "singleView.html?id=" + person._id + "&navn=" + person.fornavn,
+          "_blank"
+        );
       }
     </script>
   </body>

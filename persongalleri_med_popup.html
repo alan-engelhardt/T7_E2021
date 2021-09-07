@@ -37,6 +37,21 @@
       .valgt {
         background-color: greenyellow;
       }
+
+      #popup {
+        width: 100vw;
+        height: 100vh;
+        background-color: #00000099;
+        position: fixed;
+        top: 0;
+        padding: 2em;
+        display: none;
+      }
+
+      #popup article {
+        background-color: white;
+        width: 85%;
+      }
     </style>
   </head>
 
@@ -58,6 +73,15 @@
         <h2 class="navn"></h2>
       </article>
     </template>
+
+    <section id="popup">
+      <button>X</button>
+      <article>
+        <img src="" alt="" class="billedurl" />
+        <h2 class="navn"></h2>
+        <p>email: <span class="email"></span></p>
+      </article>
+    </section>
 
     <script>
       document.addEventListener("DOMContentLoaded", start);
@@ -107,9 +131,28 @@
             const klon = template.cloneNode(true);
             klon.querySelector(".billedurl").src = "faces/" + person.billede;
             klon.querySelector(".navn").textContent = person.fornavn;
+            klon
+              .querySelector("article")
+              .addEventListener("click", () => visDetaljer(person));
             main.appendChild(klon);
           }
         });
+      }
+
+      document
+        .querySelector("#popup button")
+        .addEventListener("click", lukPopup);
+
+      function lukPopup() {
+        document.querySelector("#popup").style.display = "none";
+      }
+
+      function visDetaljer(person) {
+        const popup = document.querySelector("#popup");
+        popup.style.display = "block";
+        popup.querySelector(".navn").textContent = person.fornavn;
+        popup.querySelector("#popup img").src = "faces/" + person.billede;
+        popup.querySelector(".email").textContent = person.email;
       }
     </script>
   </body>
