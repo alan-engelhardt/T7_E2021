@@ -13,18 +13,31 @@
       }
 
       article {
-        padding: 0.5em;
         border: 1px solid orange;
         border-radius: 1em;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         text-align: center;
+        overflow: hidden;
+      }
+      #outer {
+        height: 180px;
+        overflow: hidden;
+        border-radius: 0.5em;
+        margin: 0.5em;
+      }
+      #inner {
+        height: 180px;
+        background-size: cover;
+        background-position: center;
+        filter: grayscale(1);
+        transition: 0.3s;
       }
 
-      img {
-        max-width: 100%;
-        border-radius: 0.5em;
+      #inner:hover {
+        transform: scale(1.05);
+        filter: grayscale(0);
       }
 
       button {
@@ -54,7 +67,9 @@
 
     <template>
       <article>
-        <img src="" alt="" class="billedurl" />
+        <div id="outer">
+          <div id="inner"></div>
+        </div>
         <h2 class="navn"></h2>
       </article>
     </template>
@@ -105,7 +120,9 @@
         json.forEach((person) => {
           if (filter == "alle" || filter == person.troende) {
             const klon = template.cloneNode(true);
-            klon.querySelector(".billedurl").src = "faces/" + person.billede;
+            //klon.querySelector(".billedurl").src = "faces/" + person.billede;
+            klon.querySelector("#inner").style.backgroundImage =
+              "url(faces/" + person.billede + ")";
             klon.querySelector(".navn").textContent = person.fornavn;
             main.appendChild(klon);
           }
