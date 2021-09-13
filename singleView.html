@@ -8,17 +8,29 @@
     <style>
       img{
         max-width: 100%;
+        border-radius: 0.5em;
       }
-      #detaljer{
+      main{
         max-width: 800px;
         margin: auto;
       }
       #luk{
         cursor: pointer;
       }
+      article{
+        padding: 0.5em;
+        border: 1px solid orange;
+        border-radius: 1em;
+      }
+      #lignende{
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1em;
+      }
     </style>
   </head>
   <body>
+    <main>
     <h1>Single View</h1>
     <section id="detaljer">
       <div id="luk">&#x2715</div>
@@ -34,6 +46,16 @@
       </section>
       </article>
     </section>
+<h2>Andre med samme tro</h2>
+    <section id="lignende"></section>
+
+    <template>
+      <article>
+        <img src="" alt="" class="billedurl" />
+        <h2 class="navn"></h2>
+      </article>
+    </template>
+  </main>
     <script>
 
 
@@ -42,6 +64,7 @@
       const tro = params.get("tro");
       let person;
       let andre;
+      let skabelon;
 
       document.addEventListener("DOMContentLoaded", start);
 
@@ -54,21 +77,18 @@
       };
 
       function start(){
-        document.querySelector("#luk").addEventListener("click", ()=>window.history.back());
+        skabelon = document.querySelector("template").content;
+        document.querySelector("#luk").addEventListener("click", ()=>location.href = "persongalleri_loop.html");
         hentData();
       }
 
       async function hentData() {
-        const resspons1 = await fetch(url + "/" + id, options);
-        const resspons2 = await fetch(url + '?q={"troende":"' + tro + '"}' , options);
-        person = await resspons1.json();
-        andre = await resspons2.json();
-        visDetaljer();
+        const resspons = await fetch(url + '?q={"troende":"' + tro + '"}' , options);
+        andre = await resspons.json();
         visAndre()
       }
 
-      function visDetaljer() {
-        detaljer.style.display = "block";
+      function visDetaljer(person) {
         detaljer.querySelector("img").src = "faces/" + person.billede;
         detaljer.querySelector("h2").textContent =
           person.fornavn + " " + person.efternavn;
@@ -84,13 +104,25 @@
 
       function visAndre(){
         andre.forEach(element => {
-          
-          if(element._id!=id){
+          if(element._id==id){
+            visDetaljer(element);
+          }else{
             console.log(element);
+            const klon = skabelon.cloneNode(true);
+            klon.querySelector(".billedurl").src = "faces/" + element.billede;
+            klon.querySelector(".navn").textContent = element.fornavn;
+            klon
+              .querySelector("article")
+              .addEventListener("click", () => visNyeDetaljer(element));
+            lignende.appendChild(klon);
           }
         });
       }
 
+      function visNyeDetaljer(person) {
+        location.href =
+          "?id=" + person._id + "&tro=" + person.troende;
+      }
     </script>
   </body>
 </html>
