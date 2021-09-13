@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Loop view</title>
+    <style>
+      main {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-gap: 1em;
+        justify-content: center;
+        margin-top: 1em;
+      }
+
+      article {
+        padding: 0.5em;
+        border: 1px solid orange;
+        border-radius: 1em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-align: center;
+      }
+
+      img {
+        max-width: 100%;
+        border-radius: 0.5em;
+      }
+
+      button {
+        border: 1px solid orange;
+        border-radius: 1em;
+        margin-right: 0.5em;
+        background-color: white;
+      }
+
+      .valgt {
+        background-color: orange;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Persongalleri</h1>
+    <header>
+      <button class="filterKnap valgt" data-tro="alle">Alle</button>
+      <button class="filterKnap" data-tro="ja">Troende</button>
+      <button class="filterKnap" data-tro="nej">Ikke troende</button>
+      <button class="filterKnap" data-tro="tvivler">Tvivlere</button>
+    </header>
+    <h2 id="troTekst">Alle</h2>
+
+    <main></main>
+
+    <template>
+      <article>
+        <img src="" alt="" class="billedurl" />
+        <h2 class="navn"></h2>
+      </article>
+    </template>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", start);
+
+      const url = "https://persongalleri-5d3e.restdb.io/rest/persongalleri";
+      const options = {
+        headers: {
+          "x-apikey": "600fe9211346a1524ff12e31",
+        },
+      };
+
+      let filter = "alle";
+      let main, template, json;
+
+      function start() {
+        main = document.querySelector("main");
+        template = document.querySelector("template").content;
+        addEventListenersToButtons();
+        hentData();
+      }
+
+      function addEventListenersToButtons() {
+        document.querySelectorAll(".filterKnap").forEach((btn) => {
+          btn.addEventListener("click", filtrer);
+        });
+      }
+
+      function filtrer() {
+        filter = this.dataset.tro;
+        document.querySelector("#troTekst").textContent = this.textContent;
+        document.querySelector(".valgt").classList.remove("valgt");
+        this.classList.add("valgt");
+        console.log(filter);
+        visPersoner();
+      }
+
+      async function hentData() {
+        const resspons = await fetch(url, options);
+        json = await resspons.json();
+        visPersoner();
+      }
+
+      function visPersoner() {
+        main.textContent = "";
+        json.forEach((person) => {
+          if (filter == "alle" || filter == person.troende) {
+            const klon = template.cloneNode(true);
+            klon.querySelector(".billedurl").src = "faces/" + person.billede;
+            klon.querySelector(".navn").textContent = person.fornavn;
+            klon
+              .querySelector("article")
+              .addEventListener("click", () => visDetaljer(person));
+            main.appendChild(klon);
+          }
+        });
+      }
+
+      function visDetaljer(person) {
+        location.href =
+          "singleView.html?id=" + person._id + "&tro=" + person.troende;
+      }
+    </script>
+  </body>
+</html>
