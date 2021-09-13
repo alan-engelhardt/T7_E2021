@@ -6,65 +6,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>singleView</title>
     <style>
-      img{
+      img {
         max-width: 100%;
         border-radius: 0.5em;
       }
-      main{
+      main {
         max-width: 800px;
         margin: auto;
       }
-      #luk{
+      #luk {
         cursor: pointer;
       }
-      article{
+      article {
         padding: 0.5em;
         border: 1px solid orange;
         border-radius: 1em;
       }
-      #lignende{
+      #lignende {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 1em;
+      }
+      #tilbage {
+        padding: 0.2em 0.5em;
+        border-radius: 1em;
+        display: inline-block;
+        margin-bottom: 0.5em;
+        text-decoration: none;
+        color: white;
+        background-color: orange;
       }
     </style>
   </head>
   <body>
     <main>
-    <h1>Single View</h1>
-    <section id="detaljer">
-      <div id="luk">&#x2715</div>
-      <article>
-        <img src="" alt="" />
-      <section>
-        <h2></h2>
-        <h3>Titel: <span class="titel"></span></h3>
-        <p>Email: <span class="email"></span></p>
-        <p>Fødselsdag: <span class="fdag"></span></p>
-        <p>Hobby: <span class="hobby"></span></p>
-        <p>Troende: <span class="tro"></span></p>
+      <h1>Single View</h1>
+      <section id="detaljer">
+        <a href="persongalleri_loop.html" id="tilbage">Tibage til alle</a>
+        <article>
+          <img src="" alt="" />
+          <section>
+            <h2></h2>
+            <h3>Titel: <span class="titel"></span></h3>
+            <p>Email: <span class="email"></span></p>
+            <p>Fødselsdag: <span class="fdag"></span></p>
+            <p>Hobby: <span class="hobby"></span></p>
+            <p>Troende: <span class="tro"></span></p>
+          </section>
+        </article>
       </section>
-      </article>
-    </section>
-<h2>Andre med samme tro</h2>
-    <section id="lignende"></section>
+      <h2>Andre med samme tro</h2>
+      <section id="lignende"></section>
 
-    <template>
-      <article>
-        <img src="" alt="" class="billedurl" />
-        <h2 class="navn"></h2>
-      </article>
-    </template>
-  </main>
+      <template>
+        <article>
+          <img src="" alt="" class="billedurl" />
+          <h2 class="navn"></h2>
+        </article>
+      </template>
+    </main>
     <script>
-
-
       const params = new URLSearchParams(window.location.search);
       const id = params.get("id");
       const tro = params.get("tro");
       let person;
       let andre;
       let skabelon;
+      let tæller = 0;
+      const antal = 3;
 
       document.addEventListener("DOMContentLoaded", start);
 
@@ -76,16 +85,18 @@
         },
       };
 
-      function start(){
+      function start() {
         skabelon = document.querySelector("template").content;
-        document.querySelector("#luk").addEventListener("click", ()=>location.href = "persongalleri_loop.html");
         hentData();
       }
 
       async function hentData() {
-        const resspons = await fetch(url + '?q={"troende":"' + tro + '"}' , options);
+        const resspons = await fetch(
+          url + '?q={"troende":"' + tro + '"}',
+          options
+        );
         andre = await resspons.json();
-        visAndre()
+        visAndre();
       }
 
       function visDetaljer(person) {
@@ -97,17 +108,19 @@
         const fdag = person.fødselsdag.slice(8, 10);
         const fmd = person.fødselsdag.slice(5, 7);
         const faar = person.fødselsdag.slice(0, 4);
-        detaljer.querySelector(".fdag").textContent = fdag + ". " + fmd + ". " + faar;
+        detaljer.querySelector(".fdag").textContent =
+          fdag + ". " + fmd + ". " + faar;
         detaljer.querySelector(".hobby").textContent = person.hobby;
         detaljer.querySelector(".tro").textContent = person.troende;
       }
 
-      function visAndre(){
-        andre.forEach(element => {
-          if(element._id==id){
+      function visAndre() {
+        andre.forEach((element, i) => {
+          if (element._id == id) {
             visDetaljer(element);
-          }else{
-            console.log(element);
+          } else if (tæller < 3) {
+            tæller++;
+            console.log(i);
             const klon = skabelon.cloneNode(true);
             klon.querySelector(".billedurl").src = "faces/" + element.billede;
             klon.querySelector(".navn").textContent = element.fornavn;
@@ -120,8 +133,7 @@
       }
 
       function visNyeDetaljer(person) {
-        location.href =
-          "?id=" + person._id + "&tro=" + person.troende;
+        location.href = "?id=" + person._id + "&tro=" + person.troende;
       }
     </script>
   </body>
