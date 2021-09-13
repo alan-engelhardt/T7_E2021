@@ -117,7 +117,10 @@
 
       function visDetaljer(person) {
         //location.href = "singleView.html?id=" + id;
-        window.open("singleView_alike.html?id=" + person._id, "_blank");
+        window.open(
+          "singleView.html?id=" + person._id + "&tro=" + person.troende,
+          "_blank"
+        );
       }
     </script>
   </body>
