@@ -9,11 +9,18 @@
       img{
         max-width: 100%;
       }
+      #detaljer{
+        max-width: 800px;
+        margin: auto;
+      }
+      #luk{
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
     <h1>Single View</h1>
-    <section id="popup">
+    <section id="detaljer">
       <div id="luk">&#x2715</div>
       <article>
         <img src="" alt="" />
@@ -28,15 +35,15 @@
       </article>
     </section>
     <script>
+
+
       const params = new URLSearchParams(window.location.search);
       const id = params.get("id");
       const tro = params.get("tro");
       let person;
       let andre;
 
-      console.log(id, tro);
-
-      document.addEventListener("DOMContentLoaded", hentData);
+      document.addEventListener("DOMContentLoaded", start);
 
       const url = "https://persongalleri-5d3e.restdb.io/rest/persongalleri";
 
@@ -46,9 +53,14 @@
         },
       };
 
+      function start(){
+        document.querySelector("#luk").addEventListener("click", ()=>window.history.back());
+        hentData();
+      }
+
       async function hentData() {
         const resspons1 = await fetch(url + "/" + id, options);
-        const resspons2 = await fetch(url + '?q={"troende":"' + tro + '"}&max=3' , options);
+        const resspons2 = await fetch(url + '?q={"troende":"' + tro + '"}' , options);
         person = await resspons1.json();
         andre = await resspons2.json();
         visDetaljer();
@@ -56,22 +68,27 @@
       }
 
       function visDetaljer() {
-        popup.style.display = "block";
-        popup.querySelector("img").src = "faces/" + person.billede;
-        popup.querySelector("h2").textContent =
+        detaljer.style.display = "block";
+        detaljer.querySelector("img").src = "faces/" + person.billede;
+        detaljer.querySelector("h2").textContent =
           person.fornavn + " " + person.efternavn;
-        popup.querySelector(".titel").textContent = person.titel;
-        popup.querySelector(".email").textContent = person.email;
+        detaljer.querySelector(".titel").textContent = person.titel;
+        detaljer.querySelector(".email").textContent = person.email;
         const fdag = person.fødselsdag.slice(8, 10);
         const fmd = person.fødselsdag.slice(5, 7);
         const faar = person.fødselsdag.slice(0, 4);
-        popup.querySelector(".fdag").textContent = fdag + ". " + fmd + ". " + faar;
-        popup.querySelector(".hobby").textContent = person.hobby;
-        popup.querySelector(".tro").textContent = person.troende;
+        detaljer.querySelector(".fdag").textContent = fdag + ". " + fmd + ". " + faar;
+        detaljer.querySelector(".hobby").textContent = person.hobby;
+        detaljer.querySelector(".tro").textContent = person.troende;
       }
 
       function visAndre(){
-        console.log(andre);
+        andre.forEach(element => {
+          
+          if(element._id!=id){
+            console.log(element);
+          }
+        });
       }
 
     </script>
