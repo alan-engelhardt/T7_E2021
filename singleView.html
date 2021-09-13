@@ -67,7 +67,7 @@
     </main>
     <script>
       const params = new URLSearchParams(window.location.search);
-      const id = params.get("id");
+      let id = params.get("id");
       const tro = params.get("tro");
       let person;
       let andre;
@@ -115,25 +115,21 @@
       }
 
       function visAndre() {
-        andre.forEach((element, i) => {
+        lignende.textContent = "";
+        andre.forEach((element) => {
           if (element._id == id) {
             visDetaljer(element);
-          } else if (tæller < 3) {
-            tæller++;
-            console.log(i);
+          } else {
             const klon = skabelon.cloneNode(true);
             klon.querySelector(".billedurl").src = "faces/" + element.billede;
             klon.querySelector(".navn").textContent = element.fornavn;
-            klon
-              .querySelector("article")
-              .addEventListener("click", () => visNyeDetaljer(element));
+            klon.querySelector("article").addEventListener("click", () => {
+              id = element._id;
+              visAndre();
+            });
             lignende.appendChild(klon);
           }
         });
-      }
-
-      function visNyeDetaljer(person) {
-        location.href = "?id=" + person._id + "&tro=" + person.troende;
       }
     </script>
   </body>
